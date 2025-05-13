@@ -21,7 +21,7 @@ public class Notification {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private long userId;
+    private long memberId;
     private long voteId;
     private boolean checked;
     private LocalDateTime createdAt;

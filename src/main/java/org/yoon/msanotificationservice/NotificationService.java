@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NotificationService {
 
     private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
+    private final NotificationRepository notificationRepository;
 
     public SseEmitter connect(long userId) {
         SseEmitter emitter = new SseEmitter(60 * 1000L); // 1분 타임아웃
