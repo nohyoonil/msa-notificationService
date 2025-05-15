@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import org.yoon.msanotificationservice.Notification;
 import org.yoon.msanotificationservice.NotificationRepository;
 import org.yoon.msanotificationservice.NotificationService;
+import org.yoon.msanotificationservice.model.dto.NotificationSseDto;
+import org.yoon.msanotificationservice.model.dto.VoteDetailDto;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -24,23 +24,17 @@ public class KafkaConsumer {
     @KafkaListener(topics = "create.notification", groupId = "notification-service")
     public void listen(String message) {
         try {
-            HashMap<String, Object> map = objectMapper.readValue(message, HashMap.class);
+            VoteDetailDto voteDetail = objectMapper.readValue(message, VoteDetailDto.class);
             Notification notification = Notification.builder()
-                    .memberId(Long.parseLong(map.get("targetId").toString()))
-                    .voteId(Long.parseLong(map.get("voteId").toString()))
+                    .memberId(voteDetail.getTargetId()) //알림 송신 -> targetId member
+                    .voteId(voteDetail.getVoteId())
                     .createdAt(LocalDateTime.now())
                     .build();
 
             notificationRepository.save(notification);
 
-            Map<String, Object> resposeMap = new HashMap<>();
-            resposeMap.put("notificationId", notification.getId());
-            resposeMap.put("memberId", notification.getMemberId());
-            resposeMap.put("voteId", notification.getVoteId());
-            resposeMap.put("createdAt", notification.getCreatedAt());
-
             notificationService.sendNotification(notification.getMemberId(),
-                    objectMapper.writeValueAsString(resposeMap));
+                    objectMapper.writeValueAsString(NotificationSseDto.from(notification)));
 
         } catch (JsonProcessingException e) {
             System.err.println("[❌ JSON 파싱 실패] " + e.getMessage());
