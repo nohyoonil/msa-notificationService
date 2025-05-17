@@ -21,7 +21,7 @@ public class KafkaConsumer {
     private final NotificationService notificationService;
     private final NotificationRepository notificationRepository;
 
-    @KafkaListener(topics = "create.notification", groupId = "notification-service")
+    @KafkaListener(topics = "vote.created", groupId = "notification-service")
     public void listen(String message) {
         try {
             VoteDetailDto voteDetail = objectMapper.readValue(message, VoteDetailDto.class);
