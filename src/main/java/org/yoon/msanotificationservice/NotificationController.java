@@ -18,7 +18,7 @@ public class NotificationController {
         return notificationService.connect(userId);
     }
 
-    @GetMapping("/api/notification/test")
+    @GetMapping("/api/notifications/test")
     public void test(@RequestHeader(value = "X-User-Id") long userId) {
         notificationService.sendNotification(userId, "test123");
     }
