@@ -17,9 +17,4 @@ public class NotificationController {
     public SseEmitter connect(@RequestHeader(value = "X-User-Id") long userId) {
         return notificationService.connect(userId);
     }
-
-    @GetMapping("/api/notifications/test")
-    public void test(@RequestHeader(value = "X-User-Id") long userId) {
-        notificationService.sendNotification(userId, "test123");
-    }
 }

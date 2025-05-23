@@ -30,7 +30,6 @@ public class KafkaConsumer {
                     .voteId(voteDetail.getVoteId())
                     .createdAt(LocalDateTime.now())
                     .build();
-
             notificationRepository.save(notification);
 
             notificationService.sendNotification(notification.getMemberId(),
